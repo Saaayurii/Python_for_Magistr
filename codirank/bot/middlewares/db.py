@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import Any, Callable, Awaitable
 from aiogram import BaseMiddleware
 from aiogram.types import TelegramObject
-from db import async_session_factory
+import db
 
 
 class DatabaseMiddleware(BaseMiddleware):
@@ -12,7 +12,7 @@ class DatabaseMiddleware(BaseMiddleware):
         event: TelegramObject,
         data: dict[str, Any],
     ) -> Any:
-        async with async_session_factory() as session:
+        async with db.async_session_factory() as session:
             data["db"] = session
             try:
                 result = await handler(event, data)

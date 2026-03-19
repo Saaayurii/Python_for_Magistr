@@ -99,7 +99,8 @@ class OllamaClient:
             app_metadata=app_metadata,
         )
         messages = [{"role": "user", "content": prompt}]
-        return await self.chat(messages, temperature=0.7, max_tokens=150)
+        # Оптимизировано для скорости: меньше токенов и температура
+        return await self.chat(messages, temperature=0.3, max_tokens=80)
 
     async def close(self) -> None:
         await self._client.aclose()

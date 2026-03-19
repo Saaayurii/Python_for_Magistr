@@ -80,9 +80,34 @@ class Ranker:
 
         languages = attributes.get("languages")
         if languages:
+            total += 2  # Увеличиваем вес языка (2 вместо 1)
+            if app.languages:
+                # Проверяем совпадение языков (учитываем как полные названия, так и коды)
+                app_langs_lower = [lang.lower() for lang in app.languages]
+                user_langs_lower = [lang.lower() for lang in languages]
+
+                matched_count = sum(
+                    1 for user_lang in user_langs_lower
+                    if any(user_lang in app_lang or app_lang in user_lang for app_lang in app_langs_lower)
+                )
+
+                if matched_count > 0:
+                    matched += 2  # Полное совпадение языка
+                elif any(lang.lower() in ["english", "en"] for lang in app.languages):
+                    matched += 1  # Частичное совпадение (английский как универсальный)
+
+        region = attributes.get("region")
+        if region and region != "global":
+            # Регион уже учтен через languages, но добавляем небольшой бонус
+            # для приложений с правильной локализацией
             total += 1
-            if app.languages and any(lang in app.languages for lang in languages):
-                matched += 1
+            if languages and app.languages:
+                app_langs_lower = [lang.lower() for lang in app.languages]
+                user_langs_lower = [lang.lower() for lang in languages]
+                if any(user_lang in app_lang or app_lang in user_lang
+                       for user_lang in user_langs_lower
+                       for app_lang in app_langs_lower):
+                    matched += 1
 
         if total == 0:
             return 0.5

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import asyncio
+import os
 import sys
 from pathlib import Path
 
@@ -16,9 +17,9 @@ from db.models import App
 from core.llm.client import OllamaClient
 
 
-OLLAMA_URL = "http://localhost:11434"
-OLLAMA_MODEL = "qwen2.5:7b-instruct-q4_K_M"
-DB_URL = "postgresql+asyncpg://user:pass@localhost:5434/codirank"
+OLLAMA_URL = os.getenv("OLLAMA_URL", "http://localhost:11434")
+OLLAMA_MODEL = os.getenv("OLLAMA_MODEL", "qwen2.5:7b")
+DB_URL = os.getenv("DATABASE_URL", "postgresql+asyncpg://user:pass@localhost:5434/codirank")
 BATCH_SIZE = 32
 
 

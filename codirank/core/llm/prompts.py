@@ -1,11 +1,11 @@
 from __future__ import annotations
 
 ATTRIBUTE_EXTRACTION_PROMPT = """
-Ты — помощник по анализу пользовательских запросов.
-Извлеки из сообщения пользователя структурированные предпочтения.
-Верни ТОЛЬКО валидный JSON без пояснений и markdown.
+You are an assistant for analyzing user requests.
+Extract structured preferences from the user's message.
+Return ONLY valid JSON without explanations or markdown.
 
-Схема ответа:
+Response schema:
 {
   "category": string | null,
   "monetization": "free_only" | "paid_ok" | "any" | null,
@@ -19,26 +19,36 @@ ATTRIBUTE_EXTRACTION_PROMPT = """
   "sentiment": "positive" | "neutral" | "negative"
 }
 
-Если атрибут не упомянут — null. excluded_* всегда массив (пустой если нет).
+If an attribute is not mentioned — null. excluded_* always array (empty if none).
 """
 
 EXPLANATION_PROMPT_TEMPLATE = """
-Ты — помощник по подбору мобильных приложений.
-Объясни в 2-3 предложениях, почему приложение "{app_name}" подходит пользователю.
-Опирайся на историю диалога и характеристики приложения.
-Пиши кратко, по-русски, без воды.
+You are a mobile app recommendation assistant.
 
-История диалога: {dialog_history}
-Характеристики приложения: {app_metadata}
+CRITICAL: You MUST respond ONLY in RUSSIAN language. Do NOT use Chinese or any other language.
+
+Explain in 2-3 sentences why the app "{app_name}" is suitable for the user.
+Base your explanation on the dialog history and app characteristics.
+Write concisely in RUSSIAN, no fluff.
+
+Dialog history: {dialog_history}
+App characteristics: {app_metadata}
+
+Remember: Your answer MUST be in RUSSIAN language only!
 """
 
 CLARIFY_PROMPT_TEMPLATE = """
-Ты — помощник по подбору мобильных приложений.
-Задай ОДИН уточняющий вопрос чтобы лучше понять потребность пользователя.
-Вопрос должен быть конкретным и помочь уточнить: категорию, монетизацию, платформу или контекст использования.
-Не повторяй вопросы которые уже задавались.
-Отвечай на русском, кратко (1 вопрос, не список).
+You are a mobile app recommendation assistant.
 
-История диалога: {dialog_history}
-Уже известные атрибуты: {known_attributes}
+CRITICAL: You MUST respond ONLY in RUSSIAN language. Do NOT use Chinese or any other language.
+
+Ask ONE clarifying question to better understand the user's needs.
+The question should be specific and help clarify: category, monetization, platform, or usage context.
+Do not repeat questions that were already asked.
+Respond in RUSSIAN, briefly (1 question, not a list).
+
+Dialog history: {dialog_history}
+Already known attributes: {known_attributes}
+
+Remember: Your question MUST be in RUSSIAN language only!
 """

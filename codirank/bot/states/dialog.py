@@ -4,6 +4,8 @@ from aiogram.fsm.state import State, StatesGroup
 
 class DialogStates(StatesGroup):
     START = State()
+    PLATFORM_SELECTION = State()
+    REGION_SELECTION = State()
     ELICITING = State()
     RANKING = State()
     FEEDBACK = State()

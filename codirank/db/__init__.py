@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession, async_sessionmaker, create_async_engine
 
 from .models import Base
@@ -19,4 +20,6 @@ async def init_db(database_url: str | None = None) -> None:
     async_session_factory = async_sessionmaker(_engine, expire_on_commit=False)
 
     async with _engine.begin() as conn:
+        # Create pgvector extension first
+        await conn.execute(text("CREATE EXTENSION IF NOT EXISTS vector"))
         await conn.run_sync(Base.metadata.create_all)
